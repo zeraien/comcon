@@ -1,0 +1,121 @@
+
+<html>
+<head>
+    <title>Control The Amp Of Doom</title>
+    <script type=text/javascript src="{{
+            url_for('static', filename='jquery-2.0.3.js') }}"></script>
+    <script type=text/javascript src="{{
+            url_for('static', filename='js/bootstrap.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}"/>
+
+    <script type="text/javascript">
+
+        var applyStatus = function(statusData)
+        {
+            $.each(statusData,function(key, value)
+            {
+                if (value===true)
+                    $("#button-"+key).addClass('active');
+                else
+                    $("#button-"+key).removeClass('active');
+
+            });
+        };
+
+        var loadStatus = function()
+        {
+            $.get('/:status', {}, function(fool){
+                applyStatus(fool);
+            });
+        };
+
+        var toggleButtonOnClick = function(btn)
+        {
+            btn.button('loading');
+
+            $.get(btn.attr('href'), {}, function(fool){
+                btn.button('reset');
+                applyStatus(fool);
+            });
+        };
+
+        $( document ).ready(function(){
+
+            var toggle_buttons = $('.cmd-toggle');
+            var normal_buttons = $('.cmd');
+
+            normal_buttons.button();
+            toggle_buttons.button();
+
+            loadStatus();
+
+            toggle_buttons.click(function(){
+                toggleButtonOnClick($(this));
+                return false;
+            });
+
+            normal_buttons.click(function(){
+                var btn = $(this);
+                btn.button('loading');
+
+                $.get(btn.attr('href'), {}, function()
+                {
+                    btn.button('reset');
+                });
+
+                return false;
+            });
+        });
+
+        var send = function ()
+        {
+
+        }
+    </script>
+</head>
+<body>
+<br/>
+    <div class="container">
+        <div class='row'>
+            <div class="col-sm-4">
+                <div class="well">
+                    <h3>Amplifier</h3>
+                    <a href="/:power" id="button-power"
+                       data-loading-text="Doing..."
+                       class="cmd-toggle btn btn-block btn-info btn-lg">Power</a>
+                    <a href="/:spk_a" id="button-speaker_a"
+                       data-loading-text="Doing..."
+                       class="cmd-toggle btn btn-block btn-info btn-lg">Speaker A</a>
+                    <a href="/:mute" id="button-mute"
+                       data-loading-text="Doing..."
+                       class="cmd-toggle btn btn-block btn-info btn-lg">Mute</a>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="well">
+                    <h3>Volume</h3>
+                    <a href="/:volume_up"
+                       class="cmd btn btn-info btn-lg btn-block"
+                       data-loading-text="Doing..."
+                            >Volume up</a>
+                    <a href="/:volume_down"
+                       class="cmd btn btn-info btn-lg  btn-block"
+                       data-loading-text="Doing..."
+                            >Volume down</a>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="well">
+                    <h3>Source</h3>
+                    {% for source in sources %}
+                        <a href="/:set_source?source={{ source }}"
+                           id="button-source_{{ source|lower }}"
+                           data-loading-text="Doing..."
+                           class="cmd-toggle btn btn-block btn-info btn-lg">{{ source }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
