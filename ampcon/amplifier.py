@@ -40,12 +40,19 @@ class Amplifier(object):
         with self.connection() as conn:
             conn.send_command("Volume+")
 
+    def ask(self, conn, what):
+        if what.lower() == 'power' or self.power:
+            return conn.ask(what=what)
+        else:
+            return False
+
+
     def configure(self):
         with self.connection() as conn:
-            self.power = conn.ask("Power")
-            self.mute = conn.ask("Mute")
-            self.source = conn.ask("Source")
-            self.speaker_a = conn.ask("SpeakerA")
+            self.power = self.ask(conn, "Power")
+            self.mute = self.ask(conn, "Mute")
+            self.source = self.ask(conn, "Source")
+            self.speaker_a = self.ask(conn, "SpeakerA")
             self.configured = True
 
     def json_ready(self):
