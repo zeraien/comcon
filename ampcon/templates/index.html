@@ -5,8 +5,8 @@
     <script type=text/javascript src="{{
             url_for('static', filename='jquery-2.0.3.js') }}"></script>
     <script type=text/javascript src="{{
-            url_for('static', filename='js/bootstrap.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}"/>
+            url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}"/>
 
     <script type="text/javascript">
 
@@ -77,7 +77,7 @@
 <br/>
     <div class="container">
         <div class='row'>
-            <div class="col-sm-4">
+            <div class="col-md-4">
                 <div class="well">
                     <h3>Amplifier</h3>
                     <a href="/:power" id="button-power"
@@ -91,7 +91,7 @@
                        class="cmd-toggle btn btn-block btn-info btn-lg">Mute</a>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-md-4">
                 <div class="well">
                     <h3>Volume</h3>
                     <a href="/:volume_up"
@@ -104,7 +104,7 @@
                             >Volume down</a>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-md-4">
                 <div class="well">
                     <h3>Source</h3>
                     {% for source in sources %}
