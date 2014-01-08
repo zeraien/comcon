@@ -16,15 +16,15 @@ Installation
 
 Required python libs:
 
-  pyserial
-  Flask
-  Jinja2
-  
+    pyserial
+    Flask
+    Jinja2
 
-Put **bootstrap 3** into the ampcon/static/bootstrap folder.
+Required web libs:
 
-Put **jquery 2** into the ampcon/static folder.
-
-
+    boostrap3 in ampcon/static/bootstrap
+    jquery2 in ampcon/static/
+    
 
 Additional files for CGI and WSGI installations will be added at some point.
+In the mean time, run it using the flask development server or roll your own CGI conf.
