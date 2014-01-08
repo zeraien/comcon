@@ -1,7 +1,7 @@
 comcon
 ======
 
-Control RS-232 devices in a browser.
+Control RS-232 devices such as amplifiers and projectors in a browser.
 
 Current version is very basic and only works with one amplifier, NAD C356. However it should not be too
 difficult to write modules for other devices.
