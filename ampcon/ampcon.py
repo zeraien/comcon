@@ -1,9 +1,12 @@
 from flask import Flask, render_template, jsonify, request
 from amplifier import Amplifier, SOURCES
+import yaml
 
 app = Flask(__name__)
 
-amplifier_obj = Amplifier(serial_port=2, logger=app.logger)
+with open("config.yaml") as f:
+	config = yaml.load(f)
+amplifier_obj = Amplifier(serial_port=config["serial_port"], logger=app.logger)
 
 @app.context_processor
 def inject_user():
