@@ -5,6 +5,8 @@
     <script type=text/javascript src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type=text/javascript src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/superhero/bootstrap.min.css"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,maximum-scale=1">
 
     <script type="text/javascript">
 
@@ -125,48 +127,40 @@
 <br/>
     <div class="container">
         <div class='row'>
-            <div class="col-md-2">
-                <h3>Amplifier</h3>
-                <a href="/:power" id="button-power"
-                   data-loading-text="Doing..."
-                   class="cmd-toggle btn btn-default btn-lg">Power</a>
-                <a href="/:spk/A" id="button-speaker_A"
-                   data-loading-text="Doing..."
-                   class="cmd-toggle btn btn-default btn-lg">Speaker A</a>
-                <a href="/:spk/B" id="button-speaker_B"
-                   data-loading-text="Doing..."
-                   class="cmd-toggle btn btn-default btn-lg">Speaker B</a>
-                <a href="/:mute" id="button-mute"
-                   data-loading-text="Doing..."
-                   class="cmd-toggle btn btn-default btn-lg">Mute</a>
-            </div>
-            <div class="col-md-2">
-                <h3>Source</h3>
-                {% for source in sources %}
-                    <a href="/:set_source?source={{ source }}"
-                       id="button-source_{{ source|lower }}"
-                       data-loading-text="Doing..."
-                       class="cmd-toggle btn btn-default btn-lg">{{ source }}</a>
-                {% endfor %}
-            </div>
             <div class="col-md-8">
                 <h3>Volume</h3>
                 <a href="/:volume?step=-3"
                    class="cmd btn btn-default btn-lg"
                    data-loading-text="Doing..."
-                        >Vol -3</a>
+                        >
+                    Vol -3
+                    <br/>
+                    <span class="glyphicon glyphicon-volume-down"></span>
+                </a>
                 <a href="/:volume?step=-1"
                    class="cmd btn btn-default btn-lg"
                    data-loading-text="Doing..."
-                        >Vol -1</a>
+                        >
+                    Vol -1
+                    <br/>
+                    <span class="glyphicon glyphicon-volume-down"></span>
+                </a>
                 <a href="/:volume?step=1"
                    class="cmd btn btn-default btn-lg"
                    data-loading-text="Doing..."
-                        >Vol +1</a>
+                        >
+                    Vol +1
+                    <br/>
+                    <span class="glyphicon glyphicon-volume-up"></span>
+                </a>
                 <a href="/:volume?step=3"
                    class="cmd btn btn-default btn-lg"
                    data-loading-text="Doing..."
-                        >Vol +3</a>
+                        >
+                    Vol +3
+                    <br/>
+                    <span class="glyphicon glyphicon-volume-up"></span>
+                </a>
                 <br/>
                 <div class="_require_calibration">
                     {% for i in range(1,9) %}
@@ -182,6 +176,38 @@
                    class="cmd-toggle btn btn-default btn-lg btn-block"
                    data-loading-text="Doing..."
                         >Calibrate</a>
+            </div>
+            <div class="col-md-2">
+                <h3>Amplifier</h3>
+                <a href="/:power" id="button-power"
+                   data-loading-text="Doing..."
+                   class="cmd-toggle btn btn-default btn-lg">
+                    Power
+                    <br/>
+                    <span class="glyphicon glyphicon-off"></span>
+                </a>
+                <a href="/:spk/A" id="button-speaker_A"
+                   data-loading-text="Doing..."
+                   class="cmd-toggle btn btn-default btn-lg">Speaker A</a>
+                <a href="/:spk/B" id="button-speaker_B"
+                   data-loading-text="Doing..."
+                   class="cmd-toggle btn btn-default btn-lg">Speaker B</a>
+                <a href="/:mute" id="button-mute"
+                   data-loading-text="Doing..."
+                   class="cmd-toggle btn btn-default btn-lg">
+                    Mute
+                    <br/>
+                    <span class="glyphicon glyphicon-volume-off"></span>
+                </a>
+            </div>
+            <div class="col-md-2">
+                <h3>Source</h3>
+                {% for source in sources %}
+                    <a href="/:set_source?source={{ source }}"
+                       id="button-source_{{ source|lower }}"
+                       data-loading-text="Doing..."
+                       class="cmd-toggle btn btn-default btn-lg">{{ source }}</a>
+                {% endfor %}
             </div>
         </div>
     </div>
