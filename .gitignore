@@ -1,3 +1,4 @@
 env-ampcon
 *.pyc
 config.yaml
+.idea
