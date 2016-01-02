@@ -12,6 +12,13 @@
         {
             $.each(statusData,function(key, value)
             {
+                if (key=="volume")
+                {
+                    if (value>=0)
+                        $("._require_calibration").show();
+                    else
+                        $("._require_calibration").hide();
+                }
                 if (value===true)
                     $("#button-"+key).addClass('active');
                 else
@@ -100,6 +107,20 @@
                        class="cmd btn btn-info btn-lg  btn-block"
                        data-loading-text="Doing..."
                             >Volume down</a>
+                    <br/>
+                    <div class="_require_calibration">
+                        {% for i in range(1,10) %}
+                        <a href="/:volume_percent/{{ i*5 }}"
+                           class="cmd btn btn-info btn-lg"
+                           data-loading-text="Doing..."
+                                >{{i*5}}%</a>
+                        {% endfor %}
+                    </div>
+                    <br/>
+                    <a href="/:volume_calibrate"
+                       class="cmd btn btn-info btn-lg btn-block"
+                       data-loading-text="Doing..."
+                            >Calibrate</a>
                 </div>
             </div>
             <div class="col-md-4">

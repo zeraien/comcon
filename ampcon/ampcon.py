@@ -32,6 +32,16 @@ def volume_down():
     amplifier_obj.volume_down()
     return jsonify(amplifier_obj.json_ready())
 
+@app.route('/:volume_percent/<int:percent>')
+def volume_percent(percent):
+    amplifier_obj.set_volume_percent(percent)
+    return jsonify(amplifier_obj.json_ready())
+
+@app.route('/:volume_calibrate')
+def volume_calibrate():
+    amplifier_obj.calibrate_volume()
+    return jsonify(amplifier_obj.json_ready())
+
 @app.route("/:status")
 def status():
     return jsonify(amplifier_obj.json_ready())
