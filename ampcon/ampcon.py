@@ -22,14 +22,10 @@ def hello_world():
     amplifier_obj.configured = False
     return render_template('index.html')
 
-@app.route('/:volume_up')
-def volume_up():
-    amplifier_obj.volume_up()
-    return jsonify(amplifier_obj.json_ready())
-
-@app.route('/:volume_down')
-def volume_down():
-    amplifier_obj.volume_down()
+@app.route('/:volume')
+def volume_change():
+    step = int(request.args.get('step'))
+    amplifier_obj.volume_change(step)
     return jsonify(amplifier_obj.json_ready())
 
 @app.route('/:volume_percent/<int:percent>')
@@ -62,9 +58,9 @@ def power():
     amplifier_obj.power_toggle()
     return jsonify(amplifier_obj.json_ready())
 
-@app.route('/:spk_a')
-def spk_a():
-    amplifier_obj.speaker_a_toggle()
+@app.route('/:spk/<speaker>')
+def toggle_speaker(speaker):
+    amplifier_obj.speaker_toggle(speaker)
     return jsonify(amplifier_obj.json_ready())
 
 @app.errorhandler(500)

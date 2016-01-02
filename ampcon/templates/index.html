@@ -3,10 +3,13 @@
 <head>
     <title>Control The Amp Of Doom</title>
     <script type=text/javascript src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script type=text/javascript src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script type=text/javascript src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/superhero/bootstrap.min.css"/>
 
     <script type="text/javascript">
+
+        var queue = [];
+        var timer = null;
 
         var applyStatus = function(statusData)
         {
@@ -15,15 +18,24 @@
                 if (key=="volume")
                 {
                     if (value>=0)
+                    {
                         $("._require_calibration").show();
+                    }
                     else
                         $("._require_calibration").hide();
                 }
-                if (value===true)
-                    $("#button-"+key).addClass('active');
+                else if (key=="volume_percent")
+                {
+                    $(".button-volume").addClass('btn-default').removeClass('btn-primary');
+                    $("#button-volume_" + value).removeClass('btn-default').addClass('btn-primary');
+                }
                 else
-                    $("#button-"+key).removeClass('active');
-
+                {
+                    if (value === true)
+                        $("#button-" + key).removeClass('btn-default').addClass('btn-primary');
+                    else
+                        $("#button-" + key).removeClass('btn-primary').addClass('btn-default');
+                }
             });
         };
 
@@ -61,78 +73,115 @@
 
             normal_buttons.click(function(){
                 var btn = $(this);
-                btn.button('loading');
-
-                $.get(btn.attr('href'), {}, function()
-                {
-                    btn.button('reset');
-                });
+                if (queue.length<5)
+                    queue.push(btn);
 
                 return false;
             });
+
+            timer = setTimeout(sendNextCommand, 500);
         });
 
-        var send = function ()
+        var sendNextCommand = function ()
         {
+            if (queue.length==0)
+            {
+                timer = setTimeout(sendNextCommand, 500);
+                return;
+            }
 
+            var action_btn = queue.shift();
+            $.get(action_btn.attr('href'), {}, function(data)
+            {
+                action_btn.button('reset');
+                applyStatus(data);
+                timer = setTimeout(sendNextCommand, 500);
+            });
         }
     </script>
+    <style>
+        .btn
+        {
+            padding: 0;
+            padding-top: 40px;
+            width: 130px;
+            height: 130px;
+            margin: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            white-space: normal;
+        }
+        a.btn
+        {
+            text-underline: none;
+        }
+        a.btn:hover
+        {
+            text-underline: none;
+        }
+    </style>
 </head>
 <body>
 <br/>
     <div class="container">
         <div class='row'>
-            <div class="col-md-4">
-                <div class="well">
-                    <h3>Amplifier</h3>
-                    <a href="/:power" id="button-power"
-                       data-loading-text="Doing..."
-                       class="cmd-toggle btn btn-block btn-info btn-lg">Power</a>
-                    <a href="/:spk_a" id="button-speaker_a"
-                       data-loading-text="Doing..."
-                       class="cmd-toggle btn btn-block btn-info btn-lg">Speaker A</a>
-                    <a href="/:mute" id="button-mute"
-                       data-loading-text="Doing..."
-                       class="cmd-toggle btn btn-block btn-info btn-lg">Mute</a>
-                </div>
+            <div class="col-md-2">
+                <h3>Amplifier</h3>
+                <a href="/:power" id="button-power"
+                   data-loading-text="Doing..."
+                   class="cmd-toggle btn btn-default btn-lg">Power</a>
+                <a href="/:spk/A" id="button-speaker_A"
+                   data-loading-text="Doing..."
+                   class="cmd-toggle btn btn-default btn-lg">Speaker A</a>
+                <a href="/:spk/B" id="button-speaker_B"
+                   data-loading-text="Doing..."
+                   class="cmd-toggle btn btn-default btn-lg">Speaker B</a>
+                <a href="/:mute" id="button-mute"
+                   data-loading-text="Doing..."
+                   class="cmd-toggle btn btn-default btn-lg">Mute</a>
             </div>
-            <div class="col-md-4">
-                <div class="well">
-                    <h3>Volume</h3>
-                    <a href="/:volume_up"
-                       class="cmd btn btn-info btn-lg btn-block"
+            <div class="col-md-2">
+                <h3>Source</h3>
+                {% for source in sources %}
+                    <a href="/:set_source?source={{ source }}"
+                       id="button-source_{{ source|lower }}"
                        data-loading-text="Doing..."
-                            >Volume up</a>
-                    <a href="/:volume_down"
-                       class="cmd btn btn-info btn-lg  btn-block"
-                       data-loading-text="Doing..."
-                            >Volume down</a>
-                    <br/>
-                    <div class="_require_calibration">
-                        {% for i in range(1,10) %}
+                       class="cmd-toggle btn btn-default btn-lg">{{ source }}</a>
+                {% endfor %}
+            </div>
+            <div class="col-md-8">
+                <h3>Volume</h3>
+                <a href="/:volume?step=-3"
+                   class="cmd btn btn-default btn-lg"
+                   data-loading-text="Doing..."
+                        >Vol -3</a>
+                <a href="/:volume?step=-1"
+                   class="cmd btn btn-default btn-lg"
+                   data-loading-text="Doing..."
+                        >Vol -1</a>
+                <a href="/:volume?step=1"
+                   class="cmd btn btn-default btn-lg"
+                   data-loading-text="Doing..."
+                        >Vol +1</a>
+                <a href="/:volume?step=3"
+                   class="cmd btn btn-default btn-lg"
+                   data-loading-text="Doing..."
+                        >Vol +3</a>
+                <br/>
+                <div class="_require_calibration">
+                    {% for i in range(1,9) %}
                         <a href="/:volume_percent/{{ i*5 }}"
-                           class="cmd btn btn-info btn-lg"
+                           id="button-volume_{{ i*5 }}"
+                           class="cmd-toggle btn btn-default btn-lg button-volume"
                            data-loading-text="Doing..."
-                                >{{i*5}}%</a>
-                        {% endfor %}
-                    </div>
-                    <br/>
-                    <a href="/:volume_calibrate"
-                       class="cmd btn btn-info btn-lg btn-block"
-                       data-loading-text="Doing..."
-                            >Calibrate</a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="well">
-                    <h3>Source</h3>
-                    {% for source in sources %}
-                        <a href="/:set_source?source={{ source }}"
-                           id="button-source_{{ source|lower }}"
-                           data-loading-text="Doing..."
-                           class="cmd-toggle btn btn-block btn-info btn-lg">{{ source }}</a>
+                                >Vol {{i*5}}%</a>
                     {% endfor %}
                 </div>
+                <a href="/:volume_calibrate"
+                   id="button-is_volume_calibrated"
+                   class="cmd-toggle btn btn-default btn-lg btn-block"
+                   data-loading-text="Doing..."
+                        >Calibrate</a>
             </div>
         </div>
     </div>

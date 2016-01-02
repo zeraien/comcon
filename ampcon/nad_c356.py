@@ -31,7 +31,7 @@ class SerialConnection(object):
 
         self.logger.debug("Sending:\t\t%s" % cmd)
 
-        self.port.write("\nMain.%s\n" % cmd)
+        self.port.write("\nMain.%s\n" % str(cmd))
         self.port.readline()
         response = self.port.readline().strip()
 
