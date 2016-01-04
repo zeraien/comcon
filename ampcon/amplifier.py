@@ -1,7 +1,35 @@
+import os
+import yaml
 from nad_c356 import SerialConnection, SOURCES
 
 __author__ = 'zeraien'
 
+class InvalidCommandError(Exception):
+    pass
+
+class Command(object):
+    def __init__(self, data):
+        self.title = data['title']
+        self.command_string = data['command']
+        self.can_ask = data.get('can_ask', False)
+
+    def run(self, connection):
+        return self._perform_command(connection)
+
+    def ask(self, connection):
+        if self.can_ask:
+            return connection.ask(what=self.command_string)
+        else:
+            raise InvalidCommandError("This command does not support asking.")
+
+    def _perform_command(self, connection):
+        return connection.send_command(self.command_string)
+
+    def __repr__(self):
+        return u"%s: %s" % (self.title, self.command_string)
+
+class AskCommand(Command):
+    pass
 
 class Amplifier(object):
 
@@ -12,6 +40,24 @@ class Amplifier(object):
         self.max_volume = 57
         self._current_volume = -1
         self._SPEAKERS = ['A', 'B']
+        self.command_objects = []
+
+    def load_commands(self):
+        with open(os.path.join(os.path.dirname(__file__),"nad_c356.yaml")) as f:
+            config = yaml.load(f)
+            commands = config['commands']
+            for command in commands:
+                is_list = command.get('list')
+                if is_list:
+                    for item in command['items']:
+                        c = Command(item)
+                        self.command_objects.append(c)
+                else:
+                    c = Command(command)
+                    self.command_objects.append(c)
+
+        print(self.command_objects)
+
 
     def connection(self):
         return SerialConnection(serial_port=self.serial_port, logger=self.logger)

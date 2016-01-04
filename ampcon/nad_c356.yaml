@@ -1,0 +1,17 @@
+configuration:
+  speakers: ["A", "B"]
+commands:
+  - title: "Power"
+    type: "ask"
+    data: "boolean"
+    command: "Power"
+    can_ask: true
+  - title: "Speaker"
+    type: "toggle"
+    list: true
+    can_ask: true
+    items:
+      - command: "SpeakerA"
+        title: "Speaker A"
+      - command: "SpeakerB"
+        title: "Speaker B"
