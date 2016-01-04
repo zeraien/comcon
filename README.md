@@ -20,11 +20,5 @@ Required python libs:
     Flask
     Jinja2
 
-Required web libs:
-
-    boostrap3 in ampcon/static/bootstrap
-    jquery2 in ampcon/static/
-    
-
 Additional files for CGI and WSGI installations will be added at some point.
 In the mean time, run it using the flask development server or roll your own CGI conf.
