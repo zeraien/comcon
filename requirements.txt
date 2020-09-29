@@ -1,0 +1,3 @@
+pyserial
+flask
+jinja2
